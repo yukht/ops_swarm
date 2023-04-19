@@ -199,7 +199,7 @@ resource "null_resource" "create_hosts2_file" {
 # An example from the Internet. Before starting the automation script, it is recommended to check the possibility of connecting by SSH
 resource "null_resource" "run_deploy_scripts2" {
 provisioner "remote-exec" {
-    inline = ["date"]
+    inline = ["date"]   # run remote command
 
     connection {
       type        = "ssh"
@@ -207,8 +207,34 @@ provisioner "remote-exec" {
       user        = "ansible"
       private_key = "${file(module.key_vm_all_automation.ssh_key_filename_v)}"
     }
+
   }
-# SSH test is completed
+
+provisioner "remote-exec" {
+    inline = ["date"]
+
+    connection {
+      type        = "ssh"
+      host        = module.swarm-vm2.public_address
+      user        = "ansible"
+      private_key = "${file(module.key_vm_all_automation.ssh_key_filename_v)}"
+    }
+
+  }
+
+  provisioner "remote-exec" {
+    inline = ["date"]
+
+    connection {
+      type        = "ssh"
+      host        = module.swarm-vm3.public_address
+      user        = "ansible"
+      private_key = "${file(module.key_vm_all_automation.ssh_key_filename_v)}"
+    }
+
+  }
+
+# SSH tests is completed
 
 # Run the automation script (For any installations. I use Ansible roles)
   provisioner "local-exec" {
