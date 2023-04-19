@@ -91,8 +91,11 @@ resource "null_resource" "update_ssh_config_ext2" {
 data "template_file" "ssh_connector2" {
   template = file("${path.module}/templates/.ssh/ssh_connector2.sh.tpl") # local path to template 
   vars = {
-    tplt_key_path       = "vm_all-ssh_key_ansible.pem"
-    tplt_public_ip      = module.swarm-vm1.private_address
+    tplt_key_path                     = "vm_all-ssh_key_ansible.pem"
+    tplt_vm1_connector_public_ip      = module.swarm-vm1.private_address
+    tplt_vm1_connector_ip             = module.swarm-vm1.private_address
+    tplt_vm2_connector_ip             = module.swarm-vm2.private_address
+    tplt_vm3_connector_ip             = module.swarm-vm3.private_address
   }
 }
 
@@ -178,8 +181,8 @@ data "template_file" "hosts2_file" {
     tplt_hosts_key_path             = "../${module.key_vm_all_automation.ssh_key_filename_v}"
     tplt_hosts_username             = "ansible"
     tplt_hosts_vm1_address          = module.swarm-vm1.private_address
-    tplt_hosts_vm2_address          = module.swarm-vm1.private_address
-    tplt_hosts_vm3_address          = module.swarm-vm1.private_address   
+    tplt_hosts_vm2_address          = module.swarm-vm2.private_address
+    tplt_hosts_vm3_address          = module.swarm-vm3.private_address   
     tplt_hosts_vm1_public_address   = module.swarm-vm1.public_address
   }
 }
