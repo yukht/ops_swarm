@@ -7,7 +7,7 @@ variable "my_network" {
 module "network_ansible" {
   source                 = "./modules/network"
   network_description    = "Создание подсети для клиентов ansible"
-  network_name           = "ansible-servers-subnet"
+  network_name           = "ansible-swarm-subnet"
   network_id             = var.my_network["current_network"] # from credentials.auto.tfvars
   folder_id              = var.my_provider["folder"]         # from credentials.auto.tfvars
   network_zone           = var.my_network["zone_a"]          # from networks.auto.tfvars

@@ -11,6 +11,16 @@ if [ -z "$1" ]
         ssh-keygen -f "/root/.ssh/known_hosts" -R "${tplt_vm1_connector_ip}"
         ssh -i vm_all-ssh_key_ansible.pem ansible@${tplt_vm1_connector_ip}
         ;;
+      2)
+        echo "Connecting to -- VM$1 --"
+        ssh-keygen -f "/root/.ssh/known_hosts" -R "${tplt_vm2_connector_ip}"
+        ssh -i vm_all-ssh_key_ansible.pem ansible@${tplt_vm2_connector_ip}
+        ;;
+      3)
+        echo "Connecting to -- VM$1 --"
+        ssh-keygen -f "/root/.ssh/known_hosts" -R "${tplt_vm3_connector_ip}"
+        ssh -i vm_all-ssh_key_ansible.pem ansible@${tplt_vm3_connector_ip}
+        ;;
       *)
         echo "No VM number $1 found, exit"
     esac

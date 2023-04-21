@@ -6,12 +6,12 @@ variable "my_network" {
 
 module "network_ansible" {
   source                 = "./modules/network"
-  network_description    = "Создание подсети для клиентов ansible"
-  network_name           = "ansible-servers-subnet"
+  network_description    = "Подсеть для серверов K8"
+  network_name           = "kube-subnet"
   network_id             = var.my_network["current_network"] # from credentials.auto.tfvars
   folder_id              = var.my_provider["folder"]         # from credentials.auto.tfvars
   network_zone           = var.my_network["zone_a"]          # from networks.auto.tfvars
-  network_v4_cidr_blocks = ["10.128.2.32/28"]                # 10.128.2.33-10.128.2.46; next subnet: 10.128.2.48/28
+  network_v4_cidr_blocks = ["10.128.2.48/28"]                # 10.128.2.49-10.128.2.62; next subnet: 10.128.2.64/28
 }
 
 
@@ -55,7 +55,7 @@ module "kube-vm1" {
 #  srv_disk_size     = 20 # Size of the disk in GB
   srv_disk_size     = 30 # Size of the disk in GB
   srv_subnet        = module.network_ansible.created_id
-  srv_ip            = "10.128.2.33"
+  srv_ip            = "10.128.2.49"
   srv_nat           = "true" # If you create a balancer, an external address is needed!
 }
 
@@ -64,7 +64,7 @@ module "kube-vm1" {
 #
 # Local config file for manual configuration of IDE and Linux ssh_config
 #
-data "template_file" "ssh_config_ext2" {
+data "template_file" "ssh_config_ext" {
   template = file("${path.module}/templates/.ssh/config_ext.tpl") # local path to template 
   vars = {
 # tplt_vm_name - VM hostname (in arbitrary form) in this template is used to configure IDE (hostname) and to connection by SSH (ssh_config file)
@@ -73,13 +73,13 @@ data "template_file" "ssh_config_ext2" {
   }
 }
 
-resource "null_resource" "update_ssh_config_ext2" {
+resource "null_resource" "update_ssh_config_ext" {
   triggers = { # apply next block after rendered
-    template = data.template_file.ssh_config_ext2.rendered
+    template = data.template_file.ssh_config_ext.rendered
   }
   provisioner "local-exec" { # After rendered run local command 'echo'
-# Export rendered template to directory server_data (filename ssh_config_ext2)
-    command = "echo '${data.template_file.ssh_config_ext2.rendered}' > server_data/ssh_config_ext2"
+# Export rendered template to directory server_data (filename ssh_config_ext)
+    command = "echo '${data.template_file.ssh_config_ext.rendered}' > server_data/ssh_config_ext"
   }
 }
 #
@@ -110,6 +110,8 @@ resource "null_resource" "update_ssh_connector" {
   }
 }
 
+/*
+# TEMPORARY DISABLED
 
 # vm2 kube-worker 1
 
@@ -136,7 +138,7 @@ module "kube-vm2" {
   srv_memory        = 3
   srv_disk_size     = 15 # Size of the disk in GB
   srv_subnet        = module.network_ansible.created_id
-  srv_ip            = "10.128.2.34"
+  srv_ip            = "10.128.2.50"
   srv_nat           = "true" # If you create a balancer, an external address is needed!
 }
 
@@ -165,7 +167,7 @@ module "kube-vm3" {
   srv_memory        = 3
   srv_disk_size     = 15 # Size of the disk in GB
   srv_subnet        = module.network_ansible.created_id
-  srv_ip            = "10.128.2.35"
+  srv_ip            = "10.128.2.51"
   srv_nat           = "true" # If you create a balancer, an external address is needed!
 }
 
@@ -194,9 +196,13 @@ module "kube-vm4" {
   srv_memory        = 3
   srv_disk_size     = 15 # Size of the disk in GB
   srv_subnet        = module.network_ansible.created_id
-  srv_ip            = "10.128.2.36"
+  srv_ip            = "10.128.2.52"
   srv_nat           = "true" # If you create a balancer, an external address is needed!
 }
+
+## // TEMPORARY DISABLED
+
+*/
 
 #
 # DEPLOY SCRIPTS
@@ -225,6 +231,11 @@ resource "null_resource" "create_hosts_file" {
     command = "echo '${data.template_file.hosts_file.rendered}' > ansible/hosts"
   }
 }
+
+
+# DISABLE AUTOMATION AND OTHER 3 VM
+
+/*
 
 # An example from the Internet. Before starting the automation script, it is recommended to check the possibility of connecting by SSH
 resource "null_resource" "run_deploy_scripts2" {
@@ -264,6 +275,18 @@ provisioner "remote-exec" {
 
   }
 
+  provisioner "remote-exec" {
+    inline = ["date"]
+
+    connection {
+      type        = "ssh"
+      host        = module.kube-vm4.public_address
+      user        = "ansible"
+      private_key = "${file(module.key_vm_all_automation.ssh_key_filename_v)}"
+    }
+
+  }
+
 # SSH tests is completed
 
 # Run the automation script (For any installations. I use Ansible roles)
@@ -271,6 +294,9 @@ provisioner "remote-exec" {
     command = "cd ansible && ansible-playbook -vvv -u ansible -i hosts --private-key '../${module.key_vm_all_automation.ssh_key_filename_v}' provision.yml"
   }
 }
+
+## AUTOMATION TEMPORARY DISABLED
+*/
 
 #
 # // DEPLOY SCRIPTS
