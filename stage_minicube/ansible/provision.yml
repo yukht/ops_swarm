@@ -1,0 +1,28 @@
+---
+- hosts: vm1, vm2, vm3
+  gather_facts: yes
+  become: true
+  roles:
+#    - nginx
+   - docker
+#    - install
+#    - gitlab-self-managed
+
+# - hosts: vm1, vm2, vm3
+#   gather_facts: yes
+#   become: true
+#   roles:
+#     - swarm_init_copy_keys
+
+# - hosts: vm2, vm3
+#   become: true
+#   roles:
+#     - make_cluster
+
+# - hosts: vm1
+#   gather_facts: yes
+#   become: true
+#   roles:
+#     - deploy
+
+
