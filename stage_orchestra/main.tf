@@ -11,7 +11,7 @@ module "network_ansible" {
   network_id             = var.my_network["current_network"] # from credentials.auto.tfvars
   folder_id              = var.my_provider["folder"]         # from credentials.auto.tfvars
   network_zone           = var.my_network["zone_a"]          # from networks.auto.tfvars
-  network_v4_cidr_blocks = ["10.128.2.32/28"]                # 10.128.2.34-10.128.2.46; next subnet: 10.128.2.48/28
+  network_v4_cidr_blocks = ["10.128.2.32/28"]                # 10.128.2.35-10.128.2.46; next subnet: 10.128.2.48/28
 }
 
 
@@ -55,7 +55,7 @@ module "swarm-vm1" {
 #  srv_disk_size     = 20 # Size of the disk in GB
   srv_disk_size     = 30 # Size of the disk in GB
   srv_subnet        = module.network_ansible.created_id
-  srv_ip            = "10.128.2.34"
+  srv_ip            = "10.128.2.35"
   srv_nat           = "true" # If you create a balancer, an external address is needed!
 }
 
@@ -135,7 +135,7 @@ module "swarm-vm2" {
   srv_memory        = 3
   srv_disk_size     = 15 # Size of the disk in GB
   srv_subnet        = module.network_ansible.created_id
-  srv_ip            = "10.128.2.35"
+  srv_ip            = "10.128.2.36"
   srv_nat           = "true" # If you create a balancer, an external address is needed!
 }
 
@@ -164,7 +164,7 @@ module "swarm-vm3" {
   srv_memory        = 3
   srv_disk_size     = 15 # Size of the disk in GB
   srv_subnet        = module.network_ansible.created_id
-  srv_ip            = "10.128.2.36"
+  srv_ip            = "10.128.2.37"
   srv_nat           = "true" # If you create a balancer, an external address is needed!
 }
 

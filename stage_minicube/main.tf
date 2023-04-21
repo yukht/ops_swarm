@@ -11,7 +11,7 @@ module "network_kube" {
   network_id             = var.my_network["current_network"] # from credentials.auto.tfvars
   folder_id              = var.my_provider["folder"]         # from credentials.auto.tfvars
   network_zone           = var.my_network["zone_a"]          # from networks.auto.tfvars
-  network_v4_cidr_blocks = ["10.128.2.48/28"]                # 10.128.2.50-10.128.2.62; next subnet: 10.128.2.64/28
+  network_v4_cidr_blocks = ["10.128.2.48/28"]                # 10.128.2.51-10.128.2.62; next subnet: 10.128.2.64/28
 }
 
 
@@ -44,7 +44,7 @@ module "kube-vm1" {
   srv_key1         = module.key_kube-vm1_default.ssh_key_v       # default ssh user public key
   srv_key2         = module.key_vm_all_automation.ssh_key_v # second ssh user public key
   srv_name         = "vm1-kube-master"
-  srv_description  = "vm1 swarm-master"
+  srv_description  = "vm1 kube-master"
   srv_zone         = var.my_network["zone_a"] # from networks.auto.tfvars
   # use standard-v3 for 50% core_fraction and standard-v1 (Intel Broadwell) for minumim server price (with 20% core_fraction) #
 #  srv_platform_id   = "standard-v1"
@@ -55,7 +55,7 @@ module "kube-vm1" {
 #  srv_disk_size     = 20 # Size of the disk in GB
   srv_disk_size     = 30 # Size of the disk in GB
   srv_subnet        = module.network_kube.created_id
-  srv_ip            = "10.128.2.50"
+  srv_ip            = "10.128.2.51"
   srv_nat           = "true" # If you create a balancer, an external address is needed!
 }
 
@@ -138,7 +138,7 @@ module "kube-vm2" {
   srv_memory        = 3
   srv_disk_size     = 15 # Size of the disk in GB
   srv_subnet        = module.network_kube.created_id
-  srv_ip            = "10.128.2.51"
+  srv_ip            = "10.128.2.52"
   srv_nat           = "true" # If you create a balancer, an external address is needed!
 }
 
@@ -167,7 +167,7 @@ module "kube-vm3" {
   srv_memory        = 3
   srv_disk_size     = 15 # Size of the disk in GB
   srv_subnet        = module.network_kube.created_id
-  srv_ip            = "10.128.2.52"
+  srv_ip            = "10.128.2.53"
   srv_nat           = "true" # If you create a balancer, an external address is needed!
 }
 
@@ -196,7 +196,7 @@ module "kube-vm4" {
   srv_memory        = 3
   srv_disk_size     = 15 # Size of the disk in GB
   srv_subnet        = module.network_kube.created_id
-  srv_ip            = "10.128.2.53"
+  srv_ip            = "10.128.2.54"
   srv_nat           = "true" # If you create a balancer, an external address is needed!
 }
 
