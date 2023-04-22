@@ -1,5 +1,6 @@
 ---
-- hosts: vm1, vm2, vm3
+#- hosts: vm1, vm2, vm3, vm4
+- hosts: vm1
   gather_facts: yes
   become: true
   roles:

@@ -233,9 +233,8 @@ resource "null_resource" "create_hosts_file" {
 }
 
 
-# DISABLE AUTOMATION AND OTHER 3 VM
 
-/*
+
 
 # An example from the Internet. Before starting the automation script, it is recommended to check the possibility of connecting by SSH
 resource "null_resource" "run_deploy_scripts2" {
@@ -250,6 +249,9 @@ provisioner "remote-exec" {
     }
 
   }
+
+/*
+# DISABLE AUTOMATION FOR OTHER 3 VM (WORKERS)
 
 provisioner "remote-exec" {
     inline = ["date"]
@@ -287,6 +289,10 @@ provisioner "remote-exec" {
 
   }
 
+## AUTOMATION FOR 3 OTHER VM (WORKERS) IS TEMPORARY DISABLED
+*/
+
+
 # SSH tests is completed
 
 # Run the automation script (For any installations. I use Ansible roles)
@@ -295,8 +301,6 @@ provisioner "remote-exec" {
   }
 }
 
-## AUTOMATION TEMPORARY DISABLED
-*/
 
 #
 # // DEPLOY SCRIPTS
