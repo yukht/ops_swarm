@@ -1,0 +1,36 @@
+---
+# tasks for swarm init role
+
+- name: Docker create SWARM master
+  ansible.builtin.shell:
+    cmd: "docker swarm init --advertise-addr {{ inventory_hostname }}"
+  when: "'vm1-swarm-master' in ansible_hostname"
+  run_once: true 
+
+- name: Docker save token command to template file make_cluster
+  ansible.builtin.shell:
+    cmd: "docker swarm join-token worker | grep 'docker' | sed -e 's/^[[:space:]]*//'"
+  register: cluster_join_command_output
+  when: "'vm1-swarm-master' in ansible_hostname"
+  run_once: true 
+
+- name: Make var
+  set_fact:
+    cluster_join_command: "{{ cluster_join_command_output.stdout }}"
+  when: "'swarm-node' in ansible_hostname"
+
+# - name: Print return information from the previous task
+#   ansible.builtin.debug:
+#     var: cluster_join_command
+#     verbosity: 2
+#   when: "'swarm-node' in ansible_hostname"
+
+- name: Copy template file make_cluster to worker nodes
+  ansible.builtin.template:
+    src: templates/make_cluster.j2
+    dest: /tmp/make_cluster.sh
+    mode: u=rwx,g=rx,o=r
+  when: "'swarm-node' in ansible_hostname"
+
+
+

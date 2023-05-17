@@ -1,0 +1,8 @@
+---
+# tasks for swarm cluster interconnect role
+
+- name: Execute make_cluster.sh script
+  ansible.builtin.shell:
+    cmd:  /bin/bash /tmp/make_cluster.sh
+  
+ 
