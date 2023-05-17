@@ -9,6 +9,7 @@ resource "yandex_compute_instance" "srv" {
   hostname    = var.srv_name
   # use standard-v3 for apply 50% core_fraction and standard-v1 (Intel Broadwell) for minumim server price (with 20% core_fraction)
   platform_id = var.srv_platform_id
+  allow_stopping_for_update = true
 
   resources {
     cores  = var.srv_cores
@@ -30,7 +31,8 @@ resource "yandex_compute_instance" "srv" {
   }
 
   scheduling_policy {
-    preemptible = true
+#    preemptible = true
+    preemptible = false
   }
 
   metadata = {
