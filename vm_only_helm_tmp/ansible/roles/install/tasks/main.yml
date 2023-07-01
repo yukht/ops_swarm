@@ -1,0 +1,64 @@
+---
+# tasks for install role
+
+# Install gitlab-runner
+
+- name: Add GitLab repository
+  ansible.builtin.shell:
+    cmd: curl -L "https://packages.gitlab.com/install/repositories/runner/gitlab-runner/script.deb.sh" | bash
+
+- name: Install GitLab Runner
+  ansible.builtin.apt:
+    name: gitlab-runner
+    update_cache: yes
+
+- name: Create group superusers
+  ansible.builtin.group:
+    name: superusers
+
+- name: Add group superusers to the sudoers and validate before saving
+  ansible.builtin.lineinfile:
+    path: /etc/sudoers
+    state: present
+    insertafter: '^%admin ALL='
+    line: '%superusers ALL=(ALL:ALL) NOPASSWD: ALL'
+    validate: /usr/sbin/visudo -cf %s
+
+- name: Add gitlab-runner to superuser group
+  ansible.builtin.user:
+    name: gitlab-runner
+    groups: superusers
+    append: yes
+
+# - name: Install artifactory dependencies
+#   ansible.builtin.apt:
+#     name: net-tools
+#     state: latest
+#     update_cache: yes
+
+# - name: Install artifactory
+#   ansible.builtin.shell:
+#     cmd: |
+#       mkdir down && cd down
+#       wget https://releases.jfrog.io/artifactory/artifactory-pro-debs/pool/jfrog-artifactory-pro/jfrog-artifactory-pro-7.55.3.deb
+#       dpkg -i ./jfrog-artifactory-pro-*.deb
+#       # wget -O jfrog-deb-installer.tar.gz "https://releases.jfrog.io/artifactory/jfrog-prox/org/artifactory/pro/deb/jfrog-platform-trial-prox/7.55.3/jfrog-platform-trial-prox-[RELEASE]-deb.tar.gz"
+
+
+# - name: Restart artifactory
+#   ansible.builtin.service:
+#     name: artifactory
+#     state: restarted
+
+
+# - name: Copy Docker and app files
+#   ansible.builtin.copy:
+#     src: files/app
+#     dest: /
+
+# - name: Create volume and change permissions
+#   ansible.builtin.file:
+#     path: /app
+#     mode: '0775'
+#     state: directory
+

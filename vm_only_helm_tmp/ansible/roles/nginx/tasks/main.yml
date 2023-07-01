@@ -1,0 +1,36 @@
+---
+# tasks file for http role
+  - name: install nginx
+    apt: name=nginx update_cache=yes
+      # state: absent
+      # clean: yes
+      # purge: yes
+
+  - name: Create webapp directory
+    file:
+      path: /opt/webapp
+      state: directory
+
+  - name: Copy default index file to remote server
+    copy:
+      src: ./files/index.html
+      dest: /opt/webapp/index.html
+
+  - name: Remove symlink
+    file:
+      path: "/etc/nginx/sites-enabled/default"
+      state: absent
+
+  - name: Copy default nginx configuration file to remote server
+    copy:
+      src: ./files/nginx.conf
+      dest: /etc/nginx/sites-available/80.conf
+
+  - name: Create symlink to default nginx configuration file
+    file:
+      src: /etc/nginx/sites-available/80.conf
+      dest: /etc/nginx/sites-enabled/80
+      state: link
+    notify: "reload nginx service"
+
+
